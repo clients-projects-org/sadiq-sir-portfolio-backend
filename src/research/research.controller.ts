@@ -8,13 +8,16 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { ResearchService } from './research.service';
 import { CreateResearchDto } from './dto/create-research.dto';
 import { UpdateResearchDto } from './dto/update-research.dto';
 import { UploadService } from '../upload/upload.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('research')
 export class ResearchController {
   constructor(

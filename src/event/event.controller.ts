@@ -8,13 +8,15 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { UploadService } from '../upload/upload.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('events')
 export class EventController {
   constructor(

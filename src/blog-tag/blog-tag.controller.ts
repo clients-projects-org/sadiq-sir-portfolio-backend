@@ -6,11 +6,14 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogTagService } from './blog-tag.service';
 import { CreateBlogTagDto } from './dto/create-blog-tag.dto';
 import { UpdateBlogTagDto } from './dto/update-blog-tag.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('blog-tags')
 export class BlogTagController {
   constructor(private readonly service: BlogTagService) {}

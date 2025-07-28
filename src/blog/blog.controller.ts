@@ -7,11 +7,14 @@ import {
   Param,
   Query,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('blogs')
 export class BlogController {
   constructor(private readonly service: BlogService) {}

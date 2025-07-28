@@ -6,11 +6,14 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { NewsletterSubscriberService } from './newsletter-subscriber.service';
 import { CreateNewsletterSubscriberDto } from './dto/create-newsletter-subscriber.dto';
 import { UpdateNewsletterSubscriberDto } from './dto/update-newsletter-subscriber.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('newsletter-subscribers')
 export class NewsletterSubscriberController {
   constructor(private readonly service: NewsletterSubscriberService) {}

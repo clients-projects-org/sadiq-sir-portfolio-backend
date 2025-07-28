@@ -9,5 +9,6 @@ import { UploadModule } from '../upload/upload.module';
   imports: [TypeOrmModule.forFeature([Achievement]), UploadModule],
   controllers: [AchievementController],
   providers: [AchievementService],
+  exports: [AchievementService],
 })
 export class AchievementModule {}

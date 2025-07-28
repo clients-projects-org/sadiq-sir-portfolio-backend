@@ -21,9 +21,17 @@ import { SocialModule } from './social/social.module';
 import { ContactModule } from './contact/contact.module';
 import { ContactMessageModule } from './contact-message/contact-message.module';
 import { NewsletterSubscriberModule } from './newsletter-subscriber/newsletter-subscriber.module';
+import { FrontendModule } from './frontend/frontend.module';
+import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads', // URL prefix
+    }),
     DatabaseModule,
     CustomConfigModule,
     JwtGlobalModule,
@@ -44,6 +52,8 @@ import { NewsletterSubscriberModule } from './newsletter-subscriber/newsletter-s
     ContactModule,
     ContactMessageModule,
     NewsletterSubscriberModule,
+    FrontendModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

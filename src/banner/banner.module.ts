@@ -9,5 +9,6 @@ import { UploadModule } from 'src/upload/upload.module';
   imports: [TypeOrmModule.forFeature([Banner]), UploadModule],
   controllers: [BannerController],
   providers: [BannerService],
+  exports: [BannerService],
 })
 export class BannerModule {}

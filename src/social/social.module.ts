@@ -6,7 +6,8 @@ import { SocialController } from './social.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Social])],
-  providers: [SocialService],
   controllers: [SocialController],
+  providers: [SocialService],
+  exports: [SocialService],
 })
 export class SocialModule {}

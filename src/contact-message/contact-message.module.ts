@@ -6,7 +6,8 @@ import { ContactMessageController } from './contact-message.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ContactMessage])],
-  providers: [ContactMessageService],
   controllers: [ContactMessageController],
+  providers: [ContactMessageService],
+  exports: [ContactMessageService],
 })
 export class ContactMessageModule {}

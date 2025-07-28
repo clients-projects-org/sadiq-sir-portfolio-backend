@@ -6,11 +6,13 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogCategoryService } from './blog-category.service';
 import { CreateBlogCategoryDto } from './dto/create-blog-category.dto';
 import { UpdateBlogCategoryDto } from './dto/update-blog-category.dto';
-
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+@UseGuards(AuthGuard)
 @Controller('blog-categories')
 export class BlogCategoryController {
   constructor(private readonly service: BlogCategoryService) {}

@@ -1,20 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { UploadService } from '../upload/upload.service';
 import { AboutMeService } from './about-me.service';
 import { CreateAboutMeDto } from './dto/create-about-me.dto';
 import { UpdateAboutMeDto } from './dto/update-about-me.dto';
-import { UploadService } from '../upload/upload.service';
-import { AnyFilesInterceptor } from '@nestjs/platform-express';
 
+@UseGuards(AuthGuard)
 @Controller('about-me')
 export class AboutMeController {
   constructor(
@@ -24,42 +26,49 @@ export class AboutMeController {
 
   @Post()
   @UseInterceptors(
-    new UploadService().createUploadInterceptor({
-      fieldName: 'images',
+    new UploadService().createMultiFieldUploadInterceptor({
+      fieldNames: ['images[0]', 'images[1]'],
       destination: './uploads/about-me',
-      multiple: true,
-      maxFiles: 2,
     }),
   )
   create(
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      'images[0]'?: Express.Multer.File[];
+      'images[1]'?: Express.Multer.File[];
+    },
     @Body() createAboutMeDto: CreateAboutMeDto,
   ) {
-    if (files?.length) {
-      createAboutMeDto.image1 = files[0]?.filename;
-      createAboutMeDto.image2 = files[1]?.filename;
-    }
+    createAboutMeDto.image1 = files['images[0]']?.[0]?.filename;
+    createAboutMeDto.image2 = files['images[1]']?.[0]?.filename;
+
     return this.aboutMeService.create(createAboutMeDto);
   }
 
   @Patch(':id')
   @UseInterceptors(
-    new UploadService().createUploadInterceptor({
-      fieldName: 'images',
+    new UploadService().createMultiFieldUploadInterceptor({
+      fieldNames: ['images[0]', 'images[1]'],
       destination: './uploads/about-me',
-      multiple: true,
-      maxFiles: 2,
     }),
   )
   update(
     @Param('id') id: string,
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles()
+    files: {
+      'images[0]'?: Express.Multer.File[];
+      'images[1]'?: Express.Multer.File[];
+    },
     @Body() updateAboutMeDto: UpdateAboutMeDto,
   ) {
-    if (files?.length) {
-      updateAboutMeDto.image1 = files[0]?.filename;
-      updateAboutMeDto.image2 = files[1]?.filename;
+    if (files['images[0]']?.[0]) {
+      updateAboutMeDto.image1 = files['images[0]'][0].filename;
     }
+
+    if (files['images[1]']?.[0]) {
+      updateAboutMeDto.image2 = files['images[1]'][0].filename;
+    }
+
     return this.aboutMeService.update(+id, updateAboutMeDto);
   }
 

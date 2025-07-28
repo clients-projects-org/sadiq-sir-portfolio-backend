@@ -1,7 +1,9 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { ContactMessageService } from './contact-message.service';
 import { CreateContactMessageDto } from './dto/create-contact-message.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('contact-messages')
 export class ContactMessageController {
   constructor(private readonly service: ContactMessageService) {}

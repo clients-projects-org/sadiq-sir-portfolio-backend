@@ -1,8 +1,12 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
+import { existsSync, unlinkSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
-import { unlinkSync, existsSync } from 'fs';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 
 @Injectable()
 export class UploadService {
@@ -61,6 +65,40 @@ export class UploadService {
     return multiple
       ? FilesInterceptor(fieldName, maxFiles, multerOptions)
       : FileInterceptor(fieldName, multerOptions);
+  }
+
+  createMultiFieldUploadInterceptor(options: {
+    fieldNames: string[]; // e.g., ['images[0]', 'images[1]']
+    destination: string;
+    maxFileSize?: number;
+    allowedMimeTypes?: string[];
+  }) {
+    const {
+      fieldNames,
+      destination,
+      maxFileSize = 5 * 1024 * 1024,
+      allowedMimeTypes = ['image/jpeg', 'image/png'],
+    } = options;
+
+    const storage = this.getMulterStorage(destination);
+
+    const fileFilter = (req, file, cb) => {
+      if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new BadRequestException('Invalid file type'), false);
+      }
+    };
+
+    const fields = fieldNames.map((name) => ({ name, maxCount: 1 }));
+
+    return FileFieldsInterceptor(fields, {
+      storage,
+      fileFilter,
+      limits: {
+        fileSize: maxFileSize,
+      },
+    });
   }
 
   // ✅ NEW: Delete a file from disk if it exists

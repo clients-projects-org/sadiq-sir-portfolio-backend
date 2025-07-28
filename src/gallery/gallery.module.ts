@@ -9,5 +9,6 @@ import { GalleryCategory } from 'src/gallery-category/entities/gallery-category.
   imports: [TypeOrmModule.forFeature([Gallery, GalleryCategory])],
   controllers: [GalleryController],
   providers: [GalleryService],
+  exports: [GalleryService],
 })
 export class GalleryModule {}

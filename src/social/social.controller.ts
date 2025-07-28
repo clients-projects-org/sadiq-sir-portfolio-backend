@@ -6,11 +6,14 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { SocialService } from './social.service';
 import { CreateSocialDto } from './dto/create-social.dto';
 import { UpdateSocialDto } from './dto/update-social.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('socials')
 export class SocialController {
   constructor(private readonly socialService: SocialService) {}

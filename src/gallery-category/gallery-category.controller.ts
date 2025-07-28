@@ -6,11 +6,14 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { GalleryCategoryService } from './gallery-category.service';
 import { CreateGalleryCategoryDto } from './dto/create-gallery-category.dto';
 import { UpdateGalleryCategoryDto } from './dto/update-gallery-category.dto';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('gallery-categories')
 export class GalleryCategoryController {
   constructor(private readonly service: GalleryCategoryService) {}

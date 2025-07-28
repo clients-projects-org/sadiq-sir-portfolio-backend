@@ -3,10 +3,13 @@ import {
   Post,
   UploadedFile,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { createUploadInterceptor } from './upload.interceptor';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('upload')
 export class UploadController {
   // Single File Upload

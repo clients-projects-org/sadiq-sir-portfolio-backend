@@ -19,12 +19,21 @@ export class UserService {
     }
     return user;
   }
+  async findOneByEmail(email: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return user;
+  }
 
   async remove(id: number): Promise<void> {
     await this.userRepository.delete(id);
   }
   async create(user: User): Promise<User> {
-    return this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    if (!savedUser) {
+      throw new NotFoundException('User could not be created');
+    }
+    savedUser.password = '';
+    return savedUser;
   }
   async update(user: User): Promise<User> {
     return this.userRepository.save(user);

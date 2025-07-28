@@ -6,7 +6,8 @@ import { NewsletterSubscriberController } from './newsletter-subscriber.controll
 
 @Module({
   imports: [TypeOrmModule.forFeature([NewsletterSubscriber])],
-  providers: [NewsletterSubscriberService],
   controllers: [NewsletterSubscriberController],
+  providers: [NewsletterSubscriberService],
+  exports: [NewsletterSubscriberService],
 })
 export class NewsletterSubscriberModule {}

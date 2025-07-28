@@ -9,5 +9,6 @@ import { UploadModule } from '../upload/upload.module';
   imports: [TypeOrmModule.forFeature([Event]), UploadModule],
   controllers: [EventController],
   providers: [EventService],
+  exports: [EventService],
 })
 export class EventModule {}

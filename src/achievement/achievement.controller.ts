@@ -8,13 +8,15 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { AchievementService } from './achievement.service';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
 import { UploadService } from '../upload/upload.service';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('achievements')
 export class AchievementController {
   constructor(
