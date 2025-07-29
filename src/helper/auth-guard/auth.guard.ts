@@ -1,9 +1,14 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ExecutionContext, CanActivate } from '@nestjs/common';
+import { CustomConfigService } from 'src/config';
 import { UserService } from 'src/user/user.service';
 import { ResponseHelper } from '../response';
-import { CustomConfigService } from 'src/config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -16,7 +21,6 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers['authorization'];
-    console.log({ authHeader });
     if (!authHeader) {
       throw new HttpException(
         ResponseHelper.error(
