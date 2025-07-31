@@ -1,21 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UploadedFile,
-  UseInterceptors,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ResearchService } from './research.service';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { UploadService } from '../upload/upload.service';
 import { CreateResearchDto } from './dto/create-research.dto';
 import { UpdateResearchDto } from './dto/update-research.dto';
-import { UploadService } from '../upload/upload.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { ResearchService } from './research.service';
 
 @UseGuards(AuthGuard)
 @Controller('research')
@@ -28,7 +27,7 @@ export class ResearchController {
   @Post()
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/research',
     }),
   )
@@ -43,7 +42,7 @@ export class ResearchController {
   @Patch(':id')
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/research',
     }),
   )

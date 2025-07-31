@@ -41,7 +41,7 @@ export class BannerService {
 
     //   Delete old image if a new one is uploaded
     if (updateBannerDto.imagePath && banner.imagePath) {
-      this.uploadService.deleteFile(banner.imagePath);
+      this.uploadService.deleteFile(banner.imagePath, 'banners');
     }
 
     const updated = this.bannerRepository.merge(banner, updateBannerDto);
@@ -60,7 +60,7 @@ export class BannerService {
 
     //   Delete image file
     if (banner.imagePath) {
-      this.uploadService.deleteFile(banner.imagePath);
+      this.uploadService.deleteFile(banner.imagePath, 'banners');
     }
 
     await this.bannerRepository.remove(banner);

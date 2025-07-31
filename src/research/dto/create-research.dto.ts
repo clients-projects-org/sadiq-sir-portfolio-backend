@@ -1,7 +1,7 @@
-import { IsOptional, IsString, IsIn } from 'class-validator';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class CreateResearchDto {
-  @IsString()
+  @IsOptional()
   image: string;
 
   @IsString()

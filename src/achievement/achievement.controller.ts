@@ -1,20 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UploadedFile,
-  UseInterceptors,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { UploadService } from '../upload/upload.service';
 import { AchievementService } from './achievement.service';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
-import { UploadService } from '../upload/upload.service';
-import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('achievements')
@@ -27,7 +27,7 @@ export class AchievementController {
   @Post()
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/achievements',
     }),
   )
@@ -42,7 +42,7 @@ export class AchievementController {
   @Patch(':id')
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/achievements',
     }),
   )

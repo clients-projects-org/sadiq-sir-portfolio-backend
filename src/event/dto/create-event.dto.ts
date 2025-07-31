@@ -1,7 +1,8 @@
-import { IsOptional, IsString, IsIn } from 'class-validator';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class CreateEventDto {
   @IsString()
+  @IsOptional()
   image: string;
 
   @IsString()

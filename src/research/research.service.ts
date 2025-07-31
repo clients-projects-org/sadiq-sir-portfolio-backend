@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Research } from './entities/research.entity';
+import { UploadService } from '../upload/upload.service';
 import { CreateResearchDto } from './dto/create-research.dto';
 import { UpdateResearchDto } from './dto/update-research.dto';
-import { UploadService } from '../upload/upload.service';
+import { Research } from './entities/research.entity';
 
 @Injectable()
 export class ResearchService {
@@ -60,7 +60,7 @@ export class ResearchService {
     if (!research) throw new NotFoundException('Research not found');
 
     if (updateDto.image && research.image) {
-      this.uploadService.deleteFile(research.image);
+      this.uploadService.deleteFile(research.image, 'research');
     }
 
     const updated = this.researchRepository.merge(research, updateDto);
@@ -81,7 +81,7 @@ export class ResearchService {
     if (!research) throw new NotFoundException('Research not found');
 
     if (research.image) {
-      this.uploadService.deleteFile(research.image);
+      this.uploadService.deleteFile(research.image, 'research');
     }
 
     await this.researchRepository.remove(research);

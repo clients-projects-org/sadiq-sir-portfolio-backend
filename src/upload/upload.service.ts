@@ -102,8 +102,8 @@ export class UploadService {
   }
 
   // ✅ NEW: Delete a file from disk if it exists
-  deleteFile(filePath: string) {
-    const fullPath = join(process.cwd(), 'uploads', 'banners', filePath);
+  deleteFile(filePath: string, folder: string) {
+    const fullPath = join(process.cwd(), 'uploads', folder, filePath);
     if (existsSync(fullPath)) {
       unlinkSync(fullPath);
     }

@@ -1,20 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   UploadedFile,
-  UseInterceptors,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { EventService } from './event.service';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { UploadService } from '../upload/upload.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { UploadService } from '../upload/upload.service';
-import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { EventService } from './event.service';
 
 @UseGuards(AuthGuard)
 @Controller('events')
@@ -27,7 +27,7 @@ export class EventController {
   @Post()
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/events',
     }),
   )
@@ -42,7 +42,7 @@ export class EventController {
   @Patch(':id')
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
-      fieldName: 'image',
+      fieldName: 'imageFile',
       destination: './uploads/events',
     }),
   )

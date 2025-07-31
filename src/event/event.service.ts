@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Event } from './entities/event.entity';
+import { UploadService } from '../upload/upload.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
-import { UploadService } from '../upload/upload.service';
+import { Event } from './entities/event.entity';
 
 @Injectable()
 export class EventService {
@@ -60,7 +60,7 @@ export class EventService {
     if (!event) throw new NotFoundException('Event not found');
 
     if (updateDto.image && event.image) {
-      this.uploadService.deleteFile(event.image);
+      this.uploadService.deleteFile(event.image, 'events');
     }
 
     const updated = this.eventRepository.merge(event, updateDto);
@@ -79,7 +79,7 @@ export class EventService {
     const event = await this.eventRepository.findOneBy({ id });
     if (!event) throw new NotFoundException('Event not found');
 
-    if (event.image) this.uploadService.deleteFile(event.image);
+    if (event.image) this.uploadService.deleteFile(event.image, 'events');
 
     await this.eventRepository.remove(event);
     return { success: true, message: 'Event deleted successfully' };

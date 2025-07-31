@@ -64,10 +64,10 @@ export class AboutMeService {
 
     // Delete old images if new ones are uploaded
     if (updateDto.image1 && about.image1) {
-      this.uploadService.deleteFile(about.image1);
+      this.uploadService.deleteFile(about.image1, 'about-me');
     }
     if (updateDto.image2 && about.image2) {
-      this.uploadService.deleteFile(about.image2);
+      this.uploadService.deleteFile(about.image2, 'about-me');
     }
 
     const updated = this.aboutMeRepository.merge(about, updateDto);
@@ -87,8 +87,8 @@ export class AboutMeService {
     const about = await this.aboutMeRepository.findOneBy({ id });
     if (!about) throw new NotFoundException('AboutMe not found');
 
-    if (about.image1) this.uploadService.deleteFile(about.image1);
-    if (about.image2) this.uploadService.deleteFile(about.image2);
+    if (about.image1) this.uploadService.deleteFile(about.image1, 'about-me');
+    if (about.image2) this.uploadService.deleteFile(about.image2, 'about-me');
 
     await this.aboutMeRepository.remove(about);
     return { success: true, message: 'AboutMe deleted successfully' };

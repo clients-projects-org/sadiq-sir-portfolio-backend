@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Achievement } from './entities/achievement.entity';
+import { UploadService } from '../upload/upload.service';
 import { CreateAchievementDto } from './dto/create-achievement.dto';
 import { UpdateAchievementDto } from './dto/update-achievement.dto';
-import { UploadService } from '../upload/upload.service';
+import { Achievement } from './entities/achievement.entity';
 
 @Injectable()
 export class AchievementService {
@@ -60,7 +60,7 @@ export class AchievementService {
     if (!record) throw new NotFoundException('Achievement not found');
 
     if (dto.image && record.image) {
-      this.uploadService.deleteFile(record.image);
+      this.uploadService.deleteFile(record.image, 'achievements');
     }
 
     const updated = this.repo.merge(record, dto);
@@ -80,7 +80,8 @@ export class AchievementService {
     const record = await this.repo.findOneBy({ id });
     if (!record) throw new NotFoundException('Achievement not found');
 
-    if (record.image) this.uploadService.deleteFile(record.image);
+    if (record.image)
+      this.uploadService.deleteFile(record.image, 'achievements');
 
     await this.repo.remove(record);
     return { success: true, message: 'Achievement deleted successfully' };
