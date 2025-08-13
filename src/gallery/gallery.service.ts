@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GalleryCategory } from 'src/gallery-category/entities/gallery-category.entity';
+import { UploadService } from 'src/upload/upload.service';
 import { Repository } from 'typeorm';
-import { Gallery } from './entities/gallery.entity';
 import { CreateGalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
-import { GalleryCategory } from 'src/gallery-category/entities/gallery-category.entity';
+import { Gallery } from './entities/gallery.entity';
 
 @Injectable()
 export class GalleryService {
@@ -14,7 +15,12 @@ export class GalleryService {
 
     @InjectRepository(GalleryCategory)
     private readonly categoryRepo: Repository<GalleryCategory>,
+    private readonly uploadService: UploadService,
   ) {}
+  private getImageUrl(filename?: string): string | null {
+    if (!filename) return null;
+    return `${process.env.BASE_URL || 'http://localhost:3000'}/uploads/gallery/${filename}`;
+  }
 
   async create(dto: CreateGalleryDto) {
     const category = await this.categoryRepo.findOneBy({ id: dto.categoryId });
@@ -26,8 +32,14 @@ export class GalleryService {
   }
 
   async findAll() {
-    const galleries = await this.galleryRepo.find({ relations: ['category'] });
-    return { success: true, data: galleries };
+    const list = await this.galleryRepo.find();
+    return {
+      success: true,
+      data: list.map((item) => ({
+        ...item,
+        imageUrl: this.getImageUrl(item.image),
+      })),
+    };
   }
 
   async findOne(id: number) {

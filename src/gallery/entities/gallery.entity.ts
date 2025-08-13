@@ -1,10 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { GalleryCategory } from '../../gallery-category/entities/gallery-category.entity';
 
 @Entity()
 export class Gallery {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  image: string;
 
   @Column()
   title: string;

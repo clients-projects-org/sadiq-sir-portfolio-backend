@@ -1,11 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
-import { Blog } from './entities/blog.entity';
+import { Repository } from 'typeorm';
 import { BlogCategory } from '../blog-category/entities/blog-category.entity';
-import { BlogTag } from '../blog-tag/entities/blog-tag.entity';
 import { CreateBlogDto } from './dto/create-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
+import { Blog } from './entities/blog.entity';
 
 @Injectable()
 export class BlogService {
@@ -15,23 +13,20 @@ export class BlogService {
 
     @InjectRepository(BlogCategory)
     private categoryRepo: Repository<BlogCategory>,
-
-    @InjectRepository(BlogTag)
-    private tagRepo: Repository<BlogTag>,
   ) {}
+
+  private getImageUrl(filename?: string): string | null {
+    if (!filename) return null;
+    return `${process.env.BASE_URL || 'http://localhost:3000'}/uploads/blog/${filename}`;
+  }
 
   async create(dto: CreateBlogDto) {
     const category = await this.categoryRepo.findOneBy({ id: dto.categoryId });
     if (!category) throw new NotFoundException('Category not found');
 
-    const tags = dto.tagIds?.length
-      ? await this.tagRepo.findByIds(dto.tagIds)
-      : [];
-
     const blog = this.blogRepo.create({
       ...dto,
       category,
-      tags,
     });
     await this.blogRepo.save(blog);
     return { success: true, data: blog };
@@ -47,8 +42,7 @@ export class BlogService {
 
     const query = this.blogRepo
       .createQueryBuilder('blog')
-      .leftJoinAndSelect('blog.category', 'category')
-      .leftJoinAndSelect('blog.tags', 'tags');
+      .leftJoinAndSelect('blog.category', 'category');
 
     if (search) {
       query.andWhere(
@@ -69,7 +63,10 @@ export class BlogService {
 
     return {
       success: true,
-      data,
+      data: data.map((item) => ({
+        ...item,
+        imageUrl: this.getImageUrl(item.image),
+      })),
       meta: {
         total,
         page,
@@ -81,7 +78,7 @@ export class BlogService {
   async findOne(id: number) {
     const blog = await this.blogRepo.findOne({
       where: { id },
-      relations: ['category', 'tags'],
+      relations: ['category'],
     });
     if (!blog) throw new NotFoundException('Blog not found');
     return { success: true, data: blog };
@@ -97,11 +94,6 @@ export class BlogService {
       });
       if (!category) throw new NotFoundException('Category not found');
       blog.category = category;
-    }
-
-    if (dto.tagIds) {
-      const tags = await this.tagRepo.findByIds(dto.tagIds);
-      blog.tags = tags;
     }
 
     const updated = this.blogRepo.merge(blog, dto);

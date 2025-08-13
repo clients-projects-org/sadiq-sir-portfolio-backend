@@ -1,16 +1,13 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
-  ManyToMany,
-  JoinTable,
-  Index,
   CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { BlogCategory } from '../../blog-category/entities/blog-category.entity';
-import { BlogTag } from '../../blog-tag/entities/blog-tag.entity';
 
 @Entity()
 export class Blog {
@@ -25,7 +22,7 @@ export class Blog {
   slug: string;
 
   @Column({ nullable: true })
-  coverImage: string;
+  image: string;
 
   @Column({ nullable: true })
   subtitle: string;
@@ -47,10 +44,6 @@ export class Blog {
 
   @ManyToOne(() => BlogCategory, (category) => category.blogs, { eager: true })
   category: BlogCategory;
-
-  @ManyToMany(() => BlogTag, { eager: true, cascade: true })
-  @JoinTable()
-  tags: BlogTag[];
 
   @CreateDateColumn()
   createdAt: Date;

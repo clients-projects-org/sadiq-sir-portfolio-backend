@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Blog } from './entities/blog.entity';
 import { BlogCategory } from '../blog-category/entities/blog-category.entity';
-import { BlogTag } from '../blog-tag/entities/blog-tag.entity';
+import { Blog } from './entities/blog.entity';
 
-import { BlogService } from './blog.service';
+import { UploadModule } from 'src/upload/upload.module';
 import { BlogController } from './blog.controller';
+import { BlogService } from './blog.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blog, BlogCategory, BlogTag])],
+  imports: [TypeOrmModule.forFeature([Blog, BlogCategory]), UploadModule],
   providers: [BlogService],
   controllers: [BlogController],
   exports: [BlogService],

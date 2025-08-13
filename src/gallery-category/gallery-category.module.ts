@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { GalleryCategoryService } from './gallery-category.service';
-import { GalleryCategoryController } from './gallery-category.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GalleryCategory } from './entities/gallery-category.entity';
+import { GalleryCategoryController } from './gallery-category.controller';
+import { GalleryCategoryService } from './gallery-category.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([GalleryCategory])],
   controllers: [GalleryCategoryController],
   providers: [GalleryCategoryService],
-  exports: [TypeOrmModule],
+  exports: [GalleryCategoryService],
 })
 export class GalleryCategoryModule {}

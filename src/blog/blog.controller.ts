@@ -1,26 +1,42 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  Param,
-  Query,
   Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
+import { UploadService } from 'src/upload/upload.service';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
-import { AuthGuard } from 'src/helper/auth-guard/auth.guard';
 
 @UseGuards(AuthGuard)
 @Controller('blogs')
 export class BlogController {
-  constructor(private readonly service: BlogService) {}
+  constructor(
+    private readonly service: BlogService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   @Post()
-  create(@Body() dto: CreateBlogDto) {
+  @UseInterceptors(
+    new UploadService().createUploadInterceptor({
+      fieldName: 'imageFile',
+      destination: './uploads/blog',
+    }),
+  )
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: CreateBlogDto,
+  ) {
+    if (file) dto.image = file.filename;
     return this.service.create(dto);
   }
 
@@ -40,7 +56,18 @@ export class BlogController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateBlogDto) {
+  @UseInterceptors(
+    new UploadService().createUploadInterceptor({
+      fieldName: 'imageFile',
+      destination: './uploads/blog',
+    }),
+  )
+  update(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() dto: UpdateBlogDto,
+  ) {
+    if (file) dto.image = file.filename;
     return this.service.update(+id, dto);
   }
 

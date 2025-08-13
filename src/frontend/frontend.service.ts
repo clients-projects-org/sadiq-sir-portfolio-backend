@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { BannerService } from '../banner/banner.service';
+import { ContactService } from 'src/contact/contact.service';
+import { GalleryCategoryService } from 'src/gallery-category/gallery-category.service';
 import { AboutMeService } from '../about-me/about-me.service';
-import { SectionsService } from '../sections/sections.service';
-import { ResearchService } from '../research/research.service';
-import { EventService } from '../event/event.service';
 import { AchievementService } from '../achievement/achievement.service';
-import { GalleryService } from '../gallery/gallery.service';
+import { BannerService } from '../banner/banner.service';
 import { BlogService } from '../blog/blog.service';
+import { EventService } from '../event/event.service';
+import { GalleryService } from '../gallery/gallery.service';
+import { ResearchService } from '../research/research.service';
+import { SectionsService } from '../sections/sections.service';
 import { SocialService } from '../social/social.service';
 
 @Injectable()
@@ -19,20 +21,38 @@ export class FrontendService {
     private readonly eventService: EventService,
     private readonly achievementService: AchievementService,
     private readonly galleryService: GalleryService,
+    private readonly galleryCategoryService: GalleryCategoryService,
     private readonly blogService: BlogService,
     private readonly socialService: SocialService,
+    private readonly contactService: ContactService,
   ) {}
 
   async getAllContent() {
-    const banners = await this.bannerService.findAll();
-    const aboutMe = await this.aboutMeService.findAll();
-    const sections = await this.sectionsService.findAll();
-    const research = await this.researchService.findAll();
-    const events = await this.eventService.findAll();
-    const achievements = await this.achievementService.findAll();
-    const galleries = await this.galleryService.findAll();
-    const blogs = await this.blogService.findAll();
-    const socials = await this.socialService.findAll();
+    const [
+      banners,
+      aboutMe,
+      sections,
+      research,
+      events,
+      achievements,
+      galleries,
+      galleryCategories,
+      blogs,
+      socials,
+      contacts,
+    ] = await Promise.all([
+      this.bannerService.findAll(),
+      this.aboutMeService.findAll(),
+      this.sectionsService.findAll(),
+      this.researchService.findAll(),
+      this.eventService.findAll(),
+      this.achievementService.findAll(),
+      this.galleryService.findAll(),
+      this.galleryCategoryService.findAllWithCount(),
+      this.blogService.findAll(),
+      this.socialService.findAll(),
+      this.contactService.findAll(),
+    ]);
 
     return {
       banners,
@@ -44,6 +64,8 @@ export class FrontendService {
       galleries,
       blogs,
       socials,
+      galleryCategories,
+      contacts,
     };
   }
 }

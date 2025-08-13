@@ -1,15 +1,19 @@
-import { IsString, IsOptional, IsIn, IsInt, IsArray } from 'class-validator';
+import { IsIn, IsOptional, IsString } from 'class-validator';
 
 export class CreateBlogDto {
   @IsString()
   title: string;
 
   @IsString()
+  @IsOptional()
+  image: string;
+
+  @IsString()
   slug: string;
 
   @IsOptional()
   @IsString()
-  coverImage?: string;
+  imagePath?: string;
 
   @IsOptional()
   @IsString()
@@ -35,10 +39,6 @@ export class CreateBlogDto {
   @IsIn(['active', 'inactive'])
   status?: 'active' | 'inactive';
 
-  @IsInt()
-  categoryId: number;
-
   @IsOptional()
-  @IsArray()
-  tagIds?: number[];
+  categoryId: number;
 }
