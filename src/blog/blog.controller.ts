@@ -17,7 +17,6 @@ import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 
-@UseGuards(AuthGuard)
 @Controller('blogs')
 export class BlogController {
   constructor(
@@ -25,6 +24,7 @@ export class BlogController {
     private readonly uploadService: UploadService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
@@ -55,6 +55,7 @@ export class BlogController {
     return this.service.findOne(+id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   @UseInterceptors(
     new UploadService().createUploadInterceptor({
@@ -71,6 +72,7 @@ export class BlogController {
     return this.service.update(+id, dto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.remove(+id);
